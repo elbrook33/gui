@@ -210,7 +210,7 @@ void drawNewLine()
 bool drawTextLimitLines(snippet text, int limit)
 {
 	int rowLimit = limit < maxRows? limit : maxRows - p.numRows;
-	int numLines = nvgTextBreakLines(nano, text.start, text.end, (p.x + p.w - p.margin) - p.curX, p.rows + p.numRows, rowLimit+1);
+	int numLines = nvgTextBreakLines(nano, text.start, text.end, (p.x + p.w - p.margin) - p.curX, p.rows + p.numRows, rowLimit + 1);
 	
 	NVGtextRow *rows = p.rows + p.numRows;
 	
@@ -220,7 +220,9 @@ bool drawTextLimitLines(snippet text, int limit)
 		p.numRows++;
 		nvgTextBounds(nano, p.curX, p.curY, rows[i].start, rows[i].end, p.bounds+(p.numRows-1)*4);
 		
+		// If there are more lines after this one, move down and left.
 		if(i < numLines - 1 && i < rowLimit - 1) {
+			// If this was a short (partial) line, recalculate subsequent lines.
 			if(p.curX > p.x + p.margin) {
 				drawNewLine();
 				snippet next = {rows[i].next, text.end, NULL};
